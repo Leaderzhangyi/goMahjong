@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>加入房间</h1>
+        <div class="form-container">
+            <div class="form-group">
+                <label for="playerName">您的名字</label>
+                <input type="text" id="playerName" placeholder="请输入您的名字">
+            </div>
+            <div class="form-group">
+                <label for="roomID">房间号</label>
+                <input type="text" id="roomID" placeholder="请输入6位房间号">
+            </div>
+            <div class="form-group">
+                <label for="password">房间密码 (如果有)</label>
+                <input type="password" id="password" placeholder="如果房间有密码，请输入">
+            </div>
+            <div class="form-actions">
+                <button onclick="joinRoom()">加入房间</button>
+                <button onclick="location.href='/'">返回</button>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/join_room.js"></script>
+</body>
+</html> 

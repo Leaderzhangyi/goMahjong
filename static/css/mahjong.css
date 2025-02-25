@@ -1,0 +1,388 @@
+.game-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.game-board {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 150px);
+    margin-top: 20px;
+}
+
+.players-container, .game-area, .chat-area {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+}
+
+.player-list ul {
+    list-style: none;
+}
+
+.player-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.player-list li.current {
+    background-color: #e3f2fd;
+}
+
+.player-list li.owner::after {
+    content: "房主";
+    background-color: #ff9800;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.game-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.other-players {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.other-player {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.other-player h4 {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.other-player .tile-count {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.other-player .tile-back {
+    width: 30px;
+    height: 40px;
+    background-color: #2c3e50;
+    border-radius: 3px;
+    margin: 2px;
+}
+
+.discard-area {
+    width: 80%;
+    height: 80%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.discarded-tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
+
+.current-player {
+    margin-top: 20px;
+}
+
+.my-tiles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.tile {
+    width: 40px;
+    height: 60px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.tile:hover {
+    transform: translateY(-5px);
+}
+
+.tile.selected {
+    border: 2px solid #3498db;
+    transform: translateY(-5px);
+}
+
+.discarded-tiles .tile {
+    width: 30px;
+    height: 45px;
+    font-size: 14px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-messages {
+    height: calc(100% - 100px);
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.chat-message.system {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+.chat-message.player {
+    background-color: #e3f2fd;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* 麻将牌样式 */
+.tile[data-tile^="1t"], .tile[data-tile^="2t"], .tile[data-tile^="3t"],
+.tile[data-tile^="4t"], .tile[data-tile^="5t"], .tile[data-tile^="6t"],
+.tile[data-tile^="7t"], .tile[data-tile^="8t"], .tile[data-tile^="9t"] {
+    background-color: #b3e5fc;
+    color: #01579b;
+}
+
+.tile[data-tile^="1p"], .tile[data-tile^="2p"], .tile[data-tile^="3p"],
+.tile[data-tile^="4p"], .tile[data-tile^="5p"], .tile[data-tile^="6p"],
+.tile[data-tile^="7p"], .tile[data-tile^="8p"], .tile[data-tile^="9p"] {
+    background-color: #c8e6c9;
+    color: #1b5e20;
+}
+
+.tile[data-tile^="1w"], .tile[data-tile^="2w"], .tile[data-tile^="3w"],
+.tile[data-tile^="4w"], .tile[data-tile^="5w"], .tile[data-tile^="6w"],
+.tile[data-tile^="7w"], .tile[data-tile^="8w"], .tile[data-tile^="9w"] {
+    background-color: #ffccbc;
+    color: #bf360c;
+}
+
+.tile[data-tile="east"], .tile[data-tile="south"],
+.tile[data-tile="west"], .tile[data-tile="north"] {
+    background-color: #d1c4e9;
+    color: #4527a0;
+}
+
+.tile[data-tile="red"], .tile[data-tile="green"], .tile[data-tile="white"] {
+    background-color: #f5f5f5;
+    color: #212121;
+}
+
+.tile[data-tile="red"] {
+    color: #d32f2f;
+}
+
+.tile[data-tile="green"] {
+    color: #388e3c;
+}
+
+/* 麻将桌布局 */
+.mahjong-table-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-right: 20px;
+}
+
+.mahjong-table {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background-color: #2c8a43;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 1fr 3fr 1fr;
+    grid-template-areas:
+        ". top ."
+        "left center right"
+        ". bottom .";
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.player-position {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-player {
+    grid-area: top;
+}
+
+.left-player {
+    grid-area: left;
+}
+
+.right-player {
+    grid-area: right;
+}
+
+.bottom-player {
+    grid-area: bottom;
+}
+
+.center-area {
+    grid-area: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-info {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.player-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.invite-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.invite-btn:hover {
+    background-color: #45a049;
+}
+
+.player-tiles {
+    width: 100%;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.tile-count {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tile-back {
+    width: 20px;
+    height: 30px;
+    background-color: #2c3e50;
+    border-radius: 3px;
+    margin: 2px;
+}
+
+.action-area {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.side-panel {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 响应式布局 */
+@media (max-width: 1200px) {
+    .game-container {
+        flex-direction: column;
+    }
+    
+    .side-panel {
+        width: 100%;
+        flex-direction: row;
+        margin-top: 20px;
+    }
+    
+    .mahjong-table {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .side-panel {
+        flex-direction: column;
+    }
+} 

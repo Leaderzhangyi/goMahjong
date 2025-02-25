@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>四川麻将🀄</h1>
+        
+        <div class="menu">
+            <div class="menu-item" onclick="location.href='/create'">
+                <h2>创建房间</h2>
+                <p>创建一个新的麻将房间，邀请好友一起玩</p>
+            </div>
+            <div class="menu-item" onclick="location.href='/join'">
+                <h2>加入房间</h2>
+                <p>通过房间号加入好友创建的房间</p>
+            </div>
+        </div>
+        
+        <!-- 房间列表 -->
+        <div class="room-list-container">
+            <h2>当前活跃房间</h2>
+            <div id="roomList" class="room-list">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/main.js"></script>
+</body>
+</html> 
