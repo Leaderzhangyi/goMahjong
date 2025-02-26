@@ -43,27 +43,34 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
-    
+
+
     // 监听页面关闭事件
     window.addEventListener('beforeunload', function(e) {
-        // 发送离开房间消息
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            // 使用同步方式发送消息，确保在页面关闭前发送
-            const msg = JSON.stringify({
-                type: 'leave_room',
-                data: {}
-            });
-            socket.send(msg);
-            
-            // 同步关闭WebSocket连接
-            socket.close();
-        }
-        
-        // 显示确认对话框
         e.preventDefault();
-        return '确定要离开房间吗？';
+        userConfirmedLeave();
     });
+
+  
 });
+
+function exitGame(){
+    if (confirm('确定退出游戏吗？')) {
+        userConfirmedLeave();
+        window.location.href = '/';
+    }
+}
+
+function userConfirmedLeave() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        const msg = JSON.stringify({
+            type: 'leave_room',
+            data: {}
+        });
+        socket.send(msg);
+        socket.close();
+    }
+}
 
 // 连接WebSocket
 function connectWebSocket() {
@@ -317,7 +324,8 @@ function updatePlayerList(players, owner) {
         
         // 如果是自己，只显示名字和"(我)"标识
         if (player.id === playerID) {
-            li.innerHTML = `${player.name} (我)`;
+            li.innerHTML = `${player.name} (我) 
+             ${owner && player.id === owner.id ? '<span class="owner-tag">房主</span>' : ''}`;
         } else {
             // 如果是其他玩家，且是房主，显示房主标签
             li.innerHTML = `

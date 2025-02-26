@@ -80,6 +80,7 @@ func HandleWebSocket(c *gin.Context, gameManager *service.GameManager) {
 
 // 处理来自玩家的消息
 func handlePlayerMessages(player *model.Player, room *model.Room, gameManager *service.GameManager) {
+	var message model.Message
 	logger := config.GetZapLogger()
 	defer func() {
 		if r := recover(); r != nil {
@@ -94,7 +95,6 @@ func handlePlayerMessages(player *model.Player, room *model.Room, gameManager *s
 			break
 		}
 
-		var message model.Message
 		if err := json.Unmarshal(msg, &message); err != nil {
 			logger.Error("解析消息失败: " + err.Error())
 			continue

@@ -19,6 +19,7 @@ function loadRoomList() {
             // 清空现有内容
             roomList.innerHTML = '';
             console.log("当前房间为:"+data.rooms)
+            console.log("当前房间数目为:"+data.rooms.length)
             if (data.rooms && data.rooms.length > 0) {
                 // 显示房间列表
                 data.rooms.forEach(room => {

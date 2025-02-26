@@ -1,8 +1,8 @@
 
 # 四川麻将项目的面向对象设计思想解析
 
-基于Go+Gin的四川麻将局域网项目
-![alt text](templates/image.png)
+基于Go+Gin+WebSocket的Web四川麻将项目
+![alt text](static/image.png)
 
 
 

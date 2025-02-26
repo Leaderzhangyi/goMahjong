@@ -53,7 +53,7 @@
     background-color: #e3f2fd;
 }
 
-.player-list li.owner::after {
+/* .player-list li.owner::after {
     content: "房主";
     background-color: #ff9800;
     color: white;
@@ -61,8 +61,35 @@
     border-radius: 4px;
     font-size: 12px;
     margin-left: 10px;
+} */
+.exit-btn-container {
+    margin-top: 10px;
+    text-align: center;
 }
 
+.exit-btn {
+    padding: 8px 16px;
+    background-color: #ff4d4d !important;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.exit-btn:hover {
+    background-color: #e60000 !important;
+}
+
+
+.owner-tag {
+    background-color: #ff9800;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 10px;
+    display: inline-block;
+}
 .game-area {
     display: flex;
     flex-direction: column;
@@ -204,46 +231,6 @@
     border-radius: 4px;
 }
 
-/* 麻将牌样式 */
-.tile[data-tile^="1t"], .tile[data-tile^="2t"], .tile[data-tile^="3t"],
-.tile[data-tile^="4t"], .tile[data-tile^="5t"], .tile[data-tile^="6t"],
-.tile[data-tile^="7t"], .tile[data-tile^="8t"], .tile[data-tile^="9t"] {
-    background-color: #b3e5fc;
-    color: #01579b;
-}
-
-.tile[data-tile^="1p"], .tile[data-tile^="2p"], .tile[data-tile^="3p"],
-.tile[data-tile^="4p"], .tile[data-tile^="5p"], .tile[data-tile^="6p"],
-.tile[data-tile^="7p"], .tile[data-tile^="8p"], .tile[data-tile^="9p"] {
-    background-color: #c8e6c9;
-    color: #1b5e20;
-}
-
-.tile[data-tile^="1w"], .tile[data-tile^="2w"], .tile[data-tile^="3w"],
-.tile[data-tile^="4w"], .tile[data-tile^="5w"], .tile[data-tile^="6w"],
-.tile[data-tile^="7w"], .tile[data-tile^="8w"], .tile[data-tile^="9w"] {
-    background-color: #ffccbc;
-    color: #bf360c;
-}
-
-.tile[data-tile="east"], .tile[data-tile="south"],
-.tile[data-tile="west"], .tile[data-tile="north"] {
-    background-color: #d1c4e9;
-    color: #4527a0;
-}
-
-.tile[data-tile="red"], .tile[data-tile="green"], .tile[data-tile="white"] {
-    background-color: #f5f5f5;
-    color: #212121;
-}
-
-.tile[data-tile="red"] {
-    color: #d32f2f;
-}
-
-.tile[data-tile="green"] {
-    color: #388e3c;
-}
 
 /* 麻将桌布局 */
 .mahjong-table-container {
