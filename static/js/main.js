@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 加载房间列表
     loadRoomList();
     
-    // 每10秒刷新一次房间列表
-    setInterval(loadRoomList, 10000);
+    // 每15秒刷新一次房间列表
+    setInterval(loadRoomList, 15000);
 });
 
 // 加载房间列表
@@ -18,7 +18,7 @@ function loadRoomList() {
             
             // 清空现有内容
             roomList.innerHTML = '';
-            
+            console.log("当前房间为:"+data.rooms)
             if (data.rooms && data.rooms.length > 0) {
                 // 显示房间列表
                 data.rooms.forEach(room => {
@@ -53,7 +53,7 @@ function loadRoomList() {
             document.getElementById('roomList').innerHTML = '<div class="no-rooms">加载房间列表失败，请刷新页面重试</div>';
         });
 }
-
+ 
 // 加入房间
 function joinRoom(roomID) {
     // 跳转到加入房间页面，并传递房间ID

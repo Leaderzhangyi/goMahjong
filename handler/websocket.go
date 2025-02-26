@@ -6,6 +6,7 @@ import (
 	"goMahjong/model"
 	"goMahjong/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -67,6 +68,12 @@ func HandleWebSocket(c *gin.Context, gameManager *service.GameManager) {
 		},
 	}, player.ID)
 
+	// 设置连接关闭时的处理函数
+	conn.SetCloseHandler(func(code int, text string) error {
+		handlePlayerLeave(player, room, gameManager)
+		return nil
+	})
+
 	// 处理来自客户端的消息
 	go handlePlayerMessages(player, room, gameManager)
 }
@@ -83,29 +90,7 @@ func handlePlayerMessages(player *model.Player, room *model.Room, gameManager *s
 	for {
 		_, msg, err := player.Conn.ReadMessage()
 		if err != nil {
-			logger.Info("玩家断开连接: " + player.Name)
-			room.RemovePlayer(player.ID)
-			room.BroadcastAll(model.Message{
-				Type: "player_left",
-				Data: map[string]interface{}{
-					"playerID": player.ID,
-				},
-			})
-
-			// 如果房间没有玩家了，删除房间
-			if len(room.Players) == 0 {
-				gameManager.RemoveRoom(room.ID)
-			} else if room.Owner.ID == player.ID && len(room.Players) > 0 {
-				// 如果房主离开，选择新房主
-				newOwner := room.Players[0]
-				room.SetOwner(newOwner)
-				room.BroadcastAll(model.Message{
-					Type: "new_owner",
-					Data: map[string]interface{}{
-						"ownerID": newOwner.ID,
-					},
-				})
-			}
+			handlePlayerLeave(player, room, gameManager)
 			break
 		}
 
@@ -154,6 +139,64 @@ func handlePlayerMessages(player *model.Player, room *model.Room, gameManager *s
 				tiles, _ := data["tiles"].([]interface{})
 				room.HandlePlayerAction(player.ID, actionType, tiles)
 			}
+		case "leave_room":
+			// 玩家主动离开房间
+			handlePlayerLeave(player, room, gameManager)
+			return
 		}
 	}
+}
+
+// 处理玩家离开的函数
+func handlePlayerLeave(player *model.Player, room *model.Room, gameManager *service.GameManager) {
+	logger := config.GetZapLogger()
+
+	if room == nil || player == nil {
+		return
+	}
+
+	logger.Info("玩家断开连接: " + player.Name)
+
+	// 从房间中移除玩家
+	room.RemovePlayer(player.ID)
+
+	// 通知其他玩家
+	room.BroadcastAll(model.Message{
+		Type: "player_left",
+		Data: map[string]interface{}{
+			"playerID": player.ID,
+		},
+	})
+
+	// 记录当前房间人数
+	logger.Info("当前玩家数量为：" + strconv.Itoa(len(room.Players)))
+
+	// 如果房间没有玩家了，删除房间
+	if len(room.Players) == 0 {
+		logger.Info("房间 " + room.ID + " 已关闭")
+		gameManager.RemoveRoom(room.ID)
+	} else if room.Owner.ID == player.ID && len(room.Players) > 0 {
+		// 如果房主离开，选择新房主
+		newOwner := room.Players[0]
+		room.SetOwner(newOwner)
+
+		// 广播新房主信息
+		room.BroadcastAll(model.Message{
+			Type: "new_owner",
+			Data: map[string]interface{}{
+				"ownerID": newOwner.ID,
+			},
+		})
+	}
+}
+
+// broadcastToRoom 向房间中的所有玩家广播消息
+func broadcastToRoom(room *model.Room, messageType string, data interface{}) {
+	if room == nil {
+		return
+	}
+	room.BroadcastAll(model.Message{
+		Type: messageType,
+		Data: data,
+	})
 }

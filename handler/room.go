@@ -27,7 +27,10 @@ func CreateRoomAPIHandler(gameManager *service.GameManager) gin.HandlerFunc {
 			return
 		}
 
+		// 创建房间成功，创建新玩家
 		player := model.NewPlayer(req.PlayerName)
+
+		// 房间添加玩家并设置玩家为房主
 		room.AddPlayer(player)
 		room.SetOwner(player)
 
@@ -100,7 +103,6 @@ func GetRoomsHandler(gameManager *service.GameManager) gin.HandlerFunc {
 					"name": room.Owner.Name,
 				}
 			}
-
 			roomsData = append(roomsData, roomData)
 		}
 

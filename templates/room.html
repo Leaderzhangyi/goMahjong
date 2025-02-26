@@ -17,90 +17,79 @@
             </div>
         </div>
         
-        <div class="mahjong-table-container">
-            <!-- 四方麻将桌 -->
-            <div class="mahjong-table">
-                <!-- 上家位置 -->
-                <div class="player-position top-player" id="topPlayer">
-                    <div class="player-info">
-                        <div class="player-name">等待加入</div>
-                        <button class="invite-btn">邀请</button>
-                    </div>
-                    <div class="player-tiles hidden">
-                        <div class="tile-count"></div>
-                    </div>
-                </div>
-                
-                <!-- 左家位置 -->
-                <div class="player-position left-player" id="leftPlayer">
-                    <div class="player-info">
-                        <div class="player-name">等待加入</div>
-                        <button class="invite-btn">邀请</button>
-                    </div>
-                    <div class="player-tiles hidden">
-                        <div class="tile-count"></div>
-                    </div>
-                </div>
-                
-                <!-- 中央区域 - 弃牌区 -->
-                <div class="center-area">
-                    <div class="discard-area">
-                        <div id="discardedTiles" class="discarded-tiles"></div>
-                    </div>
-                </div>
-                
-                <!-- 右家位置 -->
-                <div class="player-position right-player" id="rightPlayer">
-                    <div class="player-info">
-                        <div class="player-name">等待加入</div>
-                        <button class="invite-btn">邀请</button>
-                    </div>
-                    <div class="player-tiles hidden">
-                        <div class="tile-count"></div>
-                    </div>
-                </div>
-                
-                <!-- 自己位置 -->
-                <div class="player-position bottom-player" id="bottomPlayer">
-                    <div class="player-info">
-                        <div class="player-name">我</div>
-                    </div>
-                    <div class="player-tiles">
-                        <div id="myTiles" class="my-tiles"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 操作区域 -->
-            <div class="action-area">
-                <div class="action-buttons" id="actionButtons" style="display:none;">
-                    <button id="playTileBtn" disabled>出牌</button>
-                    <button id="chiBtn" style="display:none;">吃</button>
-                    <button id="pengBtn" style="display:none;">碰</button>
-                    <button id="gangBtn" style="display:none;">杠</button>
-                    <button id="huBtn" style="display:none;">胡</button>
-                    <button id="passBtn" style="display:none;">过</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 右侧信息区 -->
-        <div class="side-panel">
-            <!-- 玩家列表 -->
+        <div class="game-content">
+            <!-- 左侧玩家列表 -->
             <div class="players-container">
                 <div class="player-list">
                     <h3>玩家列表</h3>
                     <ul id="playerList"></ul>
                 </div>
             </div>
-            
-            <!-- 聊天区域 -->
-            <div class="chat-area">
-                <h3>聊天</h3>
-                <div id="chatMessages" class="chat-messages"></div>
-                <div class="chat-input">
-                    <input type="text" id="chatInput" placeholder="输入消息...">
-                    <button onclick="sendChat()">发送</button>
+
+            <!-- 中间麻将桌 -->
+            <div class="mahjong-table-container">
+                <div class="mahjong-table">
+                    <!-- 上家位置 -->
+                    <div class="player-position top-player" id="topPlayer">
+                        <div class="player-info">
+                            <div class="player-name">等待加入</div>
+                            <button class="invite-btn">邀请</button>
+                        </div>
+                        <div class="player-tiles hidden">
+                            <div class="tile-count"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 左家位置 -->
+                    <div class="player-position left-player" id="leftPlayer">
+                        <div class="player-info">
+                            <div class="player-name">等待加入</div>
+                            <button class="invite-btn">邀请</button>
+                        </div>
+                        <div class="player-tiles hidden">
+                            <div class="tile-count"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 中央区域 - 弃牌区 -->
+                    <div class="center-area">
+                        <div class="discard-area">
+                            <div id="discardedTiles" class="discarded-tiles"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右家位置 -->
+                    <div class="player-position right-player" id="rightPlayer">
+                        <div class="player-info">
+                            <div class="player-name">等待加入</div>
+                            <button class="invite-btn">邀请</button>
+                        </div>
+                        <div class="player-tiles hidden">
+                            <div class="tile-count"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 自己位置 -->
+                    <div class="player-position bottom-player" id="bottomPlayer">
+                        <div class="player-info">
+                            <div class="player-name">我</div>
+                        </div>
+                        <div class="player-tiles">
+                            <div id="myTiles" class="my-tiles"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧聊天室 -->
+            <div class="chat-container">
+                <div class="chat-area">
+                    <h3>聊天室</h3>
+                    <div id="chatMessages" class="chat-messages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="输入消息..."style="flex:1">
+                        <button onclick="sendChat()">发送</button>
+                    </div>
                 </div>
             </div>
         </div>

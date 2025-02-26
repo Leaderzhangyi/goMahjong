@@ -17,7 +17,7 @@ const (
 	GameStateFinished GameState = "finished" // 游戏结束
 )
 
-// Room 表示一个麻将房间
+// Room 表示一个麻将房间，当成数据库的逻辑操作
 type Room struct {
 	ID                 string    `json:"id"`
 	Password           string    `json:"-"`
@@ -75,13 +75,21 @@ func (r *Room) SetOwner(player *Player) {
 func (r *Room) GetRoomInfo() map[string]interface{} {
 	players := make([]map[string]interface{}, 0)
 	for _, p := range r.Players {
-		players = append(players, p.GetPublicInfo())
+		playerInfo := p.GetPublicInfo()
+		// 添加是否是房主的标识
+		playerInfo["isOwner"] = (r.Owner != nil && p.ID == r.Owner.ID)
+		players = append(players, playerInfo)
+	}
+
+	var ownerInfo map[string]interface{}
+	if r.Owner != nil {
+		ownerInfo = r.Owner.GetPublicInfo()
 	}
 
 	return map[string]interface{}{
 		"id":        r.ID,
 		"players":   players,
-		"owner":     r.Owner.GetPublicInfo(),
+		"owner":     ownerInfo, // 确保返回房主信息
 		"gameState": r.GameState,
 	}
 }
@@ -135,7 +143,7 @@ func (r *Room) StartGame() {
 
 // 初始化麻将牌
 func (r *Room) initTiles() {
-	// 简化版：使用数字1-9和字母表示不同的牌
+	// 四川麻将使用的牌：条、筒、万（1-9各4张）共108张
 	tileTypes := []string{
 		// 条子
 		"1t", "2t", "3t", "4t", "5t", "6t", "7t", "8t", "9t",
@@ -143,10 +151,6 @@ func (r *Room) initTiles() {
 		"1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p",
 		// 万子
 		"1w", "2w", "3w", "4w", "5w", "6w", "7w", "8w", "9w",
-		// 风牌：东南西北
-		"east", "south", "west", "north",
-		// 箭牌：中发白
-		"red", "green", "white",
 	}
 
 	r.Tiles = make([]string, 0)

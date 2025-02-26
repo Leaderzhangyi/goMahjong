@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 设置开始游戏按钮事件
     document.getElementById('startGameBtn').addEventListener('click', function() {
+        // 检查玩家数量
+        if (players.length < 4) {
+            alert('人数不足，需要4人才能开始游戏');
+            return;
+        }
         startGame();
     });
     
@@ -38,6 +43,26 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+    
+    // 监听页面关闭事件
+    window.addEventListener('beforeunload', function(e) {
+        // 发送离开房间消息
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            // 使用同步方式发送消息，确保在页面关闭前发送
+            const msg = JSON.stringify({
+                type: 'leave_room',
+                data: {}
+            });
+            socket.send(msg);
+            
+            // 同步关闭WebSocket连接
+            socket.close();
+        }
+        
+        // 显示确认对话框
+        e.preventDefault();
+        return '确定要离开房间吗？';
+    });
 });
 
 // 连接WebSocket
@@ -51,7 +76,7 @@ function connectWebSocket() {
         console.log('WebSocket连接已建立');
         addChatMessage('系统', '已连接到游戏服务器');
     };
-    
+    // 这行代码是一个 WebSocket 客户端 的事件处理程序，用于接收来自 WebSocket 服务器发送的消息。。
     socket.onmessage = function(event) {
         const message = JSON.parse(event.data);
         handleMessage(message);
@@ -129,9 +154,15 @@ function handleMessage(message) {
 
 // 处理房间信息
 function handleRoomInfo(data) {
+    console.log('收到房间信息:', data); // 添加调试日志
+    
     // 保存房间信息
     players = data.players || [];
     gameState = data.gameState || 'waiting';
+    const owner = data.owner; // 获取房主信息
+    
+    console.log('房主信息:', owner); // 添加调试日志
+    console.log('当前玩家:', playerID); // 添加调试日志
     
     // 找到自己的信息
     myInfo = players.find(p => p.id === playerID);
@@ -140,13 +171,13 @@ function handleRoomInfo(data) {
     document.getElementById('gameStatus').textContent = getGameStateText(gameState);
     
     // 更新玩家列表
-    updatePlayerList();
+    updatePlayerList(players, owner);
     
     // 更新麻将桌上的玩家位置
     updateTablePlayers();
     
     // 如果是房主，显示开始游戏按钮
-    if (data.owner && data.owner.id === playerID && gameState === 'waiting') {
+    if (owner && owner.id === playerID && gameState === 'waiting') {
         document.getElementById('startGameBtn').style.display = 'block';
     }
     
@@ -177,7 +208,7 @@ function handlePlayerJoined(data) {
         players.push(player);
         
         // 更新玩家列表
-        updatePlayerList();
+        updatePlayerList(players, myInfo);
         
         // 更新麻将桌上的玩家位置
         updateTablePlayers();
@@ -200,7 +231,7 @@ function handlePlayerLeft(data) {
         players.splice(playerIndex, 1);
         
         // 更新玩家列表
-        updatePlayerList();
+        updatePlayerList(players, myInfo);
         
         // 更新麻将桌上的玩家位置
         updateTablePlayers();
@@ -220,7 +251,7 @@ function handleNewOwner(data) {
     });
     
     // 更新玩家列表
-    updatePlayerList();
+    updatePlayerList(players, myInfo);
     
     // 如果自己是新房主，显示开始游戏按钮
     if (ownerID === playerID && gameState === 'waiting') {
@@ -275,27 +306,24 @@ function sendChat() {
 }
 
 // 更新玩家列表
-function updatePlayerList() {
+function updatePlayerList(players, owner) {
+    console.log('更新玩家列表:', players, owner); // 添加调试日志
+    
     const playerList = document.getElementById('playerList');
     playerList.innerHTML = '';
     
     players.forEach(player => {
         const li = document.createElement('li');
-        li.dataset.id = player.id;
         
-        let playerName = player.name;
+        // 如果是自己，只显示名字和"(我)"标识
         if (player.id === playerID) {
-            playerName += ' (我)';
-        }
-        
-        li.textContent = playerName;
-        
-        if (player.isOwner) {
-            li.classList.add('owner');
-        }
-        
-        if (player.isCurrentTurn) {
-            li.classList.add('current-turn');
+            li.innerHTML = `${player.name} (我)`;
+        } else {
+            // 如果是其他玩家，且是房主，显示房主标签
+            li.innerHTML = `
+                ${player.name}
+                ${owner && player.id === owner.id ? '<span class="owner-tag">房主</span>' : ''}
+            `;
         }
         
         playerList.appendChild(li);
@@ -459,7 +487,15 @@ function renderMyTiles() {
 
 // 开始游戏
 function startGame() {
-    sendMessage('game_start', {});
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({
+            type: 'start_game',
+            data: {}
+        }));
+    } else {
+        console.error('WebSocket未连接');
+        alert('连接已断开，无法开始游戏');
+    }
 }
 
 // 出牌
@@ -489,9 +525,7 @@ function doAction(action, tiles) {
 // 处理游戏开始
 function handleGameStarted(data) {
     gameState = 'playing';
-    document.getElementById('gameStatus').textContent = getGameStateText(gameState);
-    
-    // 隐藏开始游戏按钮
+    document.getElementById('gameStatus').textContent = '游戏进行中';
     document.getElementById('startGameBtn').style.display = 'none';
     
     // 显示操作按钮
@@ -570,7 +604,7 @@ function handleTurnChanged(data) {
     });
     
     // 更新玩家列表
-    updatePlayerList();
+    updatePlayerList(players, myInfo);
     
     // 更新是否是我的回合
     isMyTurn = currentPlayerID === playerID;
@@ -643,7 +677,7 @@ function getGameStateText(state) {
         case 'waiting':
             return '等待开始';
         case 'playing':
-            return '游戏中';
+            return '游戏进行中';
         case 'finished':
             return '游戏结束';
         default:
@@ -655,4 +689,14 @@ function getGameStateText(state) {
 function getTileText(tile) {
     // 简化版，实际应该根据牌的编码显示对应的文字或符号
     return tile;
+}
+
+// 创建麻将牌元素
+function createTileElement(tile) {
+    const tileDiv = document.createElement('div');
+    tileDiv.className = 'tile';
+    tileDiv.style.backgroundImage = `url('/static/images/${tile}.png')`;
+    tileDiv.style.backgroundSize = 'cover';
+    tileDiv.setAttribute('data-tile', tile);
+    return tileDiv;
 } 
